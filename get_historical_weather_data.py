@@ -16,6 +16,8 @@ import hsfs
 from pathlib import Path
 
 def get_historical_weather(city, start_date, end_date, latitude, longitude):
+
+    ''' Code from Open Meteo API '''
     
     cache_session = requests_cache.CachedSession('.cache', expire_after=-1)
     retry_session = retry(cache_session, retries=5, backoff_factor=0.2)
