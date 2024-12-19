@@ -1,0 +1,15 @@
+pandas
+os
+hopsworks
+numpy
+requests
+datetime
+xgboost
+scikit-learn
+geopy
+matplotlib
+openmeteo-requests
+requests-cache
+retry-requests
+hsfs
+pathlib
