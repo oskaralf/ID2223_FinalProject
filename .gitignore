@@ -162,3 +162,5 @@ cython_debug/
 #.idea/
 .cache.sqlite
 .DS_Store
+
+notebooks/SE4_model/
