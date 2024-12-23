@@ -1,7 +1,6 @@
 import requests
 import datetime
 import pandas as pd
-import json
 
 def get_price_data(year, month, day, price_class):
     url = f"https://www.elprisetjustnu.se/api/v1/prices/{year}/{month:02d}-{day:02d}_{price_class}.json"
@@ -22,7 +21,6 @@ def extract_hourly_prices(data):
     return hourly_prices
 
 def get_data(seX):
-
     start_date = datetime.date(2022, 11, 1)
     end_date = datetime.date.today()
     date_range = pd.date_range(start_date, end_date)
@@ -45,10 +43,11 @@ def get_data(seX):
                 })
         except Exception as e:
             print(f"An error occurred for {single_date}: {e}")
+    
     df = pd.DataFrame(price_data)
-    df.to_csv(f'price_data_{seX}.csv', index=False)
+    
 
-    print(df)
+    return df
 
 def get_todays_data(price_class):
     today = datetime.date.today()
@@ -56,15 +55,19 @@ def get_todays_data(price_class):
     month = today.month
     day = today.day
     
-    url = f"https://www.elprisetjustnu.se/api/v1/prices/{year}/{month:02d}-{day:02d}_{price_class}.json"
-    response = requests.get(url)
+    data = get_price_data(year, month, day, price_class)
+    hourly_prices = extract_hourly_prices(data)
+    price_data = []
+    for price in hourly_prices:
+        price_data.append({
+            'date': today,
+            'time_start': price['time_start'],
+            'price': price['SEK_per_kWh']
+        })
     
-    if response.status_code == 200:
-        return response.json()
-    else:
-        response.raise_for_status()
-    merged_df.to_csv(output_file, index=False)
-
+    df = pd.DataFrame(price_data)
+    df['date'] = pd.to_datetime(df['date'])
+    return df
 
 
 
