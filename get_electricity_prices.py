@@ -72,8 +72,10 @@ def get_todays_data(price_class):
 
 
 def main():
-    for price_class in ["SE1", "SE2", "SE3", "SE4"]:
-        get_data(price_class)
+    #for price_class in ["SE1", "SE2", "SE3", "SE4"]:
+        #get_data(price_class)
+    df = get_todays_data('SE4')
+    print(df)
 
 if __name__ == "__main__":
     main()
