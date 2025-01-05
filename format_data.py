@@ -82,11 +82,11 @@ def process_weather_data(df):
 
 def merge_data(df1, df2):
     # Ensure 'date' columns are of the same datetime64[ns] type
-    df1['date'] = pd.to_datetime(df1['date'])
-    df2['date'] = pd.to_datetime(df2['date'])
-    
-    # Merge the two DataFrames on the 'date' column
+    df1['date'] = pd.to_datetime(df1['date']).dt.tz_localize(None)
+    df2['date'] = pd.to_datetime(df2['date']).dt.tz_localize(None)
+
     merged_df = pd.merge(df1, df2, on='date', how='inner')
+    merged_df = merged_df.set_index('date')
     return merged_df
 
 def main():
