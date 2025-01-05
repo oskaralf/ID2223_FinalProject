@@ -1,3 +1,161 @@
+# import os
+# import pandas as pd
+# from entsoe import EntsoePandasClient
+# from dotenv import load_dotenv
+# from datetime import datetime, timedelta
+
+# load_dotenv()
+
+# def ensure_valid_series(series, name, start, end):
+#     """Ensure series is valid, or create an empty one if not."""
+#     if series is None or series.empty:
+#         print(f"[DEBUG] Data missing for {name}. Creating empty Series.")
+#         index = pd.date_range(start=start, end=end, freq="h", tz="Europe/Berlin")
+#         return pd.DataFrame(index=index, columns=[name], dtype=float)
+
+#     if isinstance(series, pd.Series):
+#         series.index = pd.to_datetime(series.index)
+#         series.name = name
+#         return series.resample("h").mean()
+#     elif isinstance(series, pd.DataFrame):
+#         series.index = pd.to_datetime(series.index)
+#         return series.resample("h").mean()
+#     else:
+#         raise ValueError(f"Unsupported data type for {name}")
+
+# def fetch_historical_data(api_key, start_date, end_date):
+#     """Fetch historical data."""
+#     client = EntsoePandasClient(api_key=api_key)
+
+#     start_date = pd.Timestamp(start_date, tz='Europe/Berlin')
+#     end_date = pd.Timestamp(end_date, tz='Europe/Berlin')
+#     country_code = 'SE_3'  # Sweden bidding zone
+
+#     try:
+#         # Initialize a list to hold all DataFrames
+#         data_frames = []
+
+#         # Fetch historical load
+#         try:
+#             actual_load = ensure_valid_series(
+#                 client.query_load(country_code, start=start_date, end=end_date),
+#                 "historical_load",
+#                 start_date,
+#                 end_date
+#             )
+#             data_frames.append(actual_load.rename(columns={actual_load.columns[0]: "historical_load"}))
+#         except Exception as e:
+#             print(f"[DEBUG] Error fetching historical load: {e}")
+
+#         # Fetch historical day-ahead prices
+#         try:
+#             day_ahead_prices = ensure_valid_series(
+#                 client.query_day_ahead_prices(country_code, start=start_date, end=end_date),
+#                 "historical_day_ahead_prices",
+#                 start_date,
+#                 end_date
+#             )
+#             data_frames.append(day_ahead_prices.to_frame(name="historical_day_ahead_prices"))
+#         except Exception as e:
+#             print(f"[DEBUG] Error fetching historical day-ahead prices: {e}")
+
+#         # Fetch historical total generation
+#         try:
+#             total_generation = ensure_valid_series(
+#                 client.query_generation(country_code, start=start_date, end=end_date),
+#                 "historical_total_generation",
+#                 start_date,
+#                 end_date
+#             )
+#             data_frames.append(total_generation.add_prefix("historical_total_generation_"))
+#         except Exception as e:
+#             print(f"[DEBUG] Error fetching historical total generation: {e}")
+
+#         # Combine historical data
+#         historical_data = pd.concat(data_frames, axis=1)
+#         return historical_data.ffill().dropna()
+
+#     except Exception as e:
+#         print(f"[DEBUG] Error fetching historical data: {e}")
+#         return None
+
+# def fetch_forecasted_data(api_key, start_date, end_date):
+#     """Fetch forecasted data."""
+#     client = EntsoePandasClient(api_key=api_key)
+
+#     start_date = pd.Timestamp(start_date, tz='Europe/Berlin')
+#     end_date = pd.Timestamp(end_date, tz='Europe/Berlin')
+#     country_code = 'SE_3'  # Sweden bidding zone
+
+#     try:
+#         # Initialize a list to hold all DataFrames
+#         data_frames = []
+
+#         # Fetch forecasted load
+#         try:
+#             forecasted_load = ensure_valid_series(
+#                 client.query_load_forecast(country_code, start=start_date, end=end_date),
+#                 "forecasted_load",
+#                 start_date,
+#                 end_date
+#             )
+#             data_frames.append(forecasted_load.rename(columns={forecasted_load.columns[0]: "forecasted_load"}))
+#         except Exception as e:
+#             print(f"[DEBUG] Error fetching forecasted load: {e}")
+
+#         # Fetch forecasted day-ahead prices
+#         try:
+#             day_ahead_prices = ensure_valid_series(
+#                 client.query_day_ahead_prices(country_code, start=start_date, end=end_date),
+#                 "forecasted_day_ahead_prices",
+#                 start_date,
+#                 end_date
+#             )
+#             data_frames.append(day_ahead_prices.to_frame(name="forecasted_day_ahead_prices"))
+#         except Exception as e:
+#             print(f"[DEBUG] Error fetching forecasted day-ahead prices: {e}")
+
+#         # Fetch forecasted wind and solar generation
+#         try:
+#             wind_solar_forecast = client.query_wind_and_solar_forecast(country_code, start=start_date, end=end_date)
+#             wind_solar_forecast = ensure_valid_series(
+#                 wind_solar_forecast, "forecasted_wind_solar_generation", start_date, end_date
+#             )
+#             data_frames.append(wind_solar_forecast.add_prefix("forecasted_"))
+#         except Exception as e:
+#             print(f"[DEBUG] Error fetching wind/solar forecast: {e}")
+
+#         # Combine forecasted data
+#         forecasted_data = pd.concat(data_frames, axis=1)
+#         return forecasted_data.ffill().dropna()
+
+#     except Exception as e:
+#         print(f"[DEBUG] Error fetching forecasted data: {e}")
+#         return None
+
+# if __name__ == "__main__":
+#     entsoe_api = os.getenv("ENTSOE_API")
+
+#     # Fetch historical data
+#     historical_data = fetch_historical_data(entsoe_api, "2024-01-01", "2024-12-31")
+#     if historical_data is not None:
+#         print("Historical Data:")
+#         print(historical_data.columns)
+#         print(historical_data)
+
+#     # Fetch forecasted data
+#     forecasted_data = fetch_forecasted_data(entsoe_api, "2025-01-04", "2025-01-09")
+#     if forecasted_data is not None:
+#         print("Forecasted Data:")
+
+#         print(forecasted_data.columns)
+
+#         print("--------\n")
+#         print(forecasted_data.tail(50))
+#         print("--------\n")
+#         print(forecasted_data)
+
+
 import os
 import pandas as pd
 from entsoe import EntsoePandasClient
@@ -6,152 +164,192 @@ from datetime import datetime, timedelta
 
 load_dotenv()
 
-def fetch_energy_data(key, start_date, end_date):
-    client = EntsoePandasClient(api_key=key)
+def ensure_valid_series(series, name, start, end):
+    """Ensure series is valid, or create an empty one if not."""
+    if series is None or series.empty:
+        print(f"[DEBUG] Data missing for {name}. Creating empty Series.")
+        index = pd.date_range(start=start, end=end, freq="h", tz="Europe/Berlin")
+        return pd.DataFrame(index=index, columns=[name], dtype=float)
 
-    start_date = pd.Timestamp(start_date, tz='Europe/Berlin')
-    end_date = pd.Timestamp(end_date, tz='Europe/Berlin')  
-    country_code = 'SE_3'  
-
-    def ensure_valid_series(series, name, start, end):
-        if series is None or series.empty:
-            print(f"Data missing for {name}. Creating empty Series.")
-            index = pd.date_range(start=start, end=end, freq="h", tz="Europe/Berlin")
-            return pd.Series(index=index, dtype=float, name=name)
-
+    if isinstance(series, pd.Series):
         series.index = pd.to_datetime(series.index)
         series.name = name
-
         return series.resample("h").mean()
+    elif isinstance(series, pd.DataFrame):
+        series.index = pd.to_datetime(series.index)
+        return series.resample("h").mean()
+    else:
+        raise ValueError(f"Unsupported data type for {name}")
+
+def fetch_historical_data(api_key, start_date, end_date):
+    """Fetch historical data."""
+    client = EntsoePandasClient(api_key=api_key)
+
+    start_date = pd.Timestamp(start_date, tz='Europe/Berlin')
+    end_date = pd.Timestamp(end_date, tz='Europe/Berlin')
+    country_code = 'SE_3'  # Sweden bidding zone
+
+    # Neighboring countries and their codes
+    neighboring_countries = {
+        "Finland": "FI",
+        "Norway": "10YNO-1--------2",
+        "Denmark": "10YDK-1--------W",
+    }
 
     try:
-        actual_load_se = ensure_valid_series(
-            client.query_load(country_code, start=start_date, end=end_date),
-            "load_se",
-            start_date,
-            end_date
-        )
-        day_ahead_prices = ensure_valid_series(
-            client.query_day_ahead_prices(country_code, start=start_date, end=end_date),
-            "price_se",
-            start_date,
-            end_date
-        )
+        # Initialize a list to hold all DataFrames
+        data_frames = []
 
-        flows_se_fi = ensure_valid_series(
-            client.query_crossborder_flows(country_code, "FI", start=start_date, end=end_date),
-            "flows_se_finland",
-            start_date,
-            end_date
-        )
-
-        flows_se_no = ensure_valid_series(
-            client.query_crossborder_flows(country_code, "10YNO-1--------2", start=start_date, end=end_date),
-            "flows_se_norway",
-            start_date,
-            end_date
-        )
-
-        flows_se_dk = ensure_valid_series(
-            client.query_crossborder_flows(country_code, "10YDK-1--------W", start=start_date, end=end_date),
-            "flows_se_denmark",
-            start_date,
-            end_date
-        )
-
-        load_fi = ensure_valid_series(
-            client.query_load("FI", start=start_date, end=end_date),
-            "load_finland",
-            start_date,
-            end_date
-        )
-
-        load_no = ensure_valid_series(
-            client.query_load("10YNO-1--------2", start=start_date, end=end_date),
-            "load_norway",
-            start_date,
-            end_date
-        )
-
-        load_de = ensure_valid_series(
-            client.query_load("10Y1001A1001A83F", start=start_date, end=end_date),
-            "load_germany",
-            start_date,
-            end_date
-        )
-
-        load_dk = ensure_valid_series(
-            client.query_load("10YDK-1--------W", start=start_date, end=end_date),
-            "load_denmark",
-            start_date,
-            end_date
-        )
-
+        # Fetch historical load
         try:
-            hydro_storage = client.query_aggregate_water_reservoirs_and_hydro_storage(country_code, start=start_date, end=end_date)
-            hydro_storage = ensure_valid_series(hydro_storage, "hydro_storage_se", start_date, end_date)
+            actual_load = ensure_valid_series(
+                client.query_load(country_code, start=start_date, end=end_date),
+                "historical_load",
+                start_date,
+                end_date
+            )
+            data_frames.append(actual_load.rename(columns={actual_load.columns[0]: "historical_load"}))
         except Exception as e:
-            print(f"Hydro storage data unavailable for {start_date} to {end_date}: {e}")
-            print("Attempting to fetch the latest available data...")
+            print(f"[DEBUG] Error fetching historical load: {e}")
 
+        # Fetch historical day-ahead prices
+        try:
+            day_ahead_prices = ensure_valid_series(
+                client.query_day_ahead_prices(country_code, start=start_date, end=end_date),
+                "historical_day_ahead_prices",
+                start_date,
+                end_date
+            )
+            data_frames.append(day_ahead_prices.to_frame(name="historical_day_ahead_prices"))
+        except Exception as e:
+            print(f"[DEBUG] Error fetching historical day-ahead prices: {e}")
+
+        # Fetch historical total generation
+        try:
+            total_generation = ensure_valid_series(
+                client.query_generation(country_code, start=start_date, end=end_date),
+                "historical_total_generation",
+                start_date,
+                end_date
+            )
+            data_frames.append(total_generation.add_prefix("historical_total_generation_"))
+        except Exception as e:
+            print(f"[DEBUG] Error fetching historical total generation: {e}")
+
+        # Fetch historical loads for neighboring countries
+        for country_name, country_code in neighboring_countries.items():
             try:
-                latest_start = pd.Timestamp.now(tz="Europe/Berlin") - pd.Timedelta(days=7)
-                latest_end = pd.Timestamp.now(tz="Europe/Berlin")
-                hydro_storage = client.query_aggregate_water_reservoirs_and_hydro_storage(country_code, start=latest_start, end=latest_end)
-                #hydro_storage = ensure_valid_series(hydro_storage, "hydro_storage_se", latest_start, latest_end)
-                print("Successfully fetched the latest available hydro storage data.")
-            except Exception as fallback_error:
-                print(f"Failed to fetch the latest hydro storage data: {fallback_error}")
-                hydro_storage = pd.Series(dtype=float, name="hydro_storage_se")
+                load = ensure_valid_series(
+                    client.query_load(country_code, start=start_date, end=end_date),
+                    f"historical_load_{country_name}",
+                    start_date,
+                    end_date
+                )
+                data_frames.append(load.rename(columns={load.columns[0]: f"historical_load_{country_name}"}))
+            except Exception as e:
+                print(f"[DEBUG] Error fetching historical load for {country_name}: {e}")
 
-        energy_data = pd.concat([
-            actual_load_se,
-            day_ahead_prices,
-            flows_se_fi,
-            flows_se_no,
-            flows_se_dk,  
-            load_fi,
-            load_no,
-            load_de,
-            load_dk,
-            hydro_storage
-        ], axis=1)
-
-        energy_data.columns = [
-            "load_se", "price_se", "flows_se_finland", "flows_se_norway", "flows_se_denmark",
-            "load_finland", "load_norway", "load_germany", "load_denmark", "hydro_storage_se"
-        ]
-
-        energy_data = energy_data.ffill()
-        energy_data = energy_data.dropna()
-        energy_data = energy_data.reset_index()
-        energy_data['date'] = energy_data['index'].dt.strftime('%Y-%m-%d %H:%M:%S')
-        energy_data = energy_data.drop(columns=['index'])
-
-        return energy_data
+        # Combine historical data
+        historical_data = pd.concat(data_frames, axis=1)
+        return historical_data.ffill().dropna()
 
     except Exception as e:
-        import traceback
-        traceback.print_exc()
-        print(f"Error fetching data: {e}")
+        print(f"[DEBUG] Error fetching historical data: {e}")
         return None
 
-# Example usage
+def fetch_forecasted_data(api_key, start_date, end_date):
+    """Fetch forecasted data."""
+    client = EntsoePandasClient(api_key=api_key)
+
+    start_date = pd.Timestamp(start_date, tz='Europe/Berlin')
+    end_date = pd.Timestamp(end_date, tz='Europe/Berlin')
+    country_code = 'SE_3'  # Sweden bidding zone
+
+    # Neighboring countries and their codes
+    neighboring_countries = {
+        "Finland": "FI",
+        "Norway": "10YNO-1--------2",
+        "Denmark": "10YDK-1--------W",
+    }
+
+    try:
+        # Initialize a list to hold all DataFrames
+        data_frames = []
+
+        # Fetch forecasted load
+        try:
+            forecasted_load = ensure_valid_series(
+                client.query_load_forecast(country_code, start=start_date, end=end_date),
+                "forecasted_load",
+                start_date,
+                end_date
+            )
+            data_frames.append(forecasted_load.rename(columns={forecasted_load.columns[0]: "forecasted_load"}))
+        except Exception as e:
+            print(f"[DEBUG] Error fetching forecasted load: {e}")
+
+        # Fetch forecasted day-ahead prices
+        try:
+            day_ahead_prices = ensure_valid_series(
+                client.query_day_ahead_prices(country_code, start=start_date, end=end_date),
+                "forecasted_day_ahead_prices",
+                start_date,
+                end_date
+            )
+            data_frames.append(day_ahead_prices.to_frame(name="forecasted_day_ahead_prices"))
+        except Exception as e:
+            print(f"[DEBUG] Error fetching forecasted day-ahead prices: {e}")
+
+        # Fetch forecasted wind and solar generation
+        try:
+            wind_solar_forecast = client.query_wind_and_solar_forecast(country_code, start=start_date, end=end_date)
+            wind_solar_forecast = ensure_valid_series(
+                wind_solar_forecast, "forecasted_wind_solar_generation", start_date, end_date
+            )
+            data_frames.append(wind_solar_forecast.add_prefix("forecasted_"))
+        except Exception as e:
+            print(f"[DEBUG] Error fetching wind/solar forecast: {e}")
+
+        # Fetch forecasted loads for neighboring countries
+        for country_name, country_code in neighboring_countries.items():
+            try:
+                load_forecast = ensure_valid_series(
+                    client.query_load_forecast(country_code, start=start_date, end=end_date),
+                    f"forecasted_load_{country_name}",
+                    start_date,
+                    end_date
+                )
+                data_frames.append(load_forecast.rename(columns={load_forecast.columns[0]: f"forecasted_load_{country_name}"}))
+            except Exception as e:
+                print(f"[DEBUG] Error fetching forecasted load for {country_name}: {e}")
+
+        # Combine forecasted data
+        forecasted_data = pd.concat(data_frames, axis=1)
+        return forecasted_data.ffill().dropna()
+
+    except Exception as e:
+        print(f"[DEBUG] Error fetching forecasted data: {e}")
+        return None
+
 if __name__ == "__main__":
-    entose_api = os.getenv("ENTSOE_API")
-    df_energy_data = fetch_energy_data(entose_api, "2025-01-04", "2025-01-06")
-    if df_energy_data is not None:
-        print(df_energy_data)
-    # from entsoe import EntsoePandasClient
-    # import pandas as pd
-    # from datetime import datetime
+    entsoe_api = os.getenv("ENTSOE_API")
 
-    # start_date = "2025-01-03"
-    # end_date = "2025-01-04"
+    # Fetch historical data
+    historical_data = fetch_historical_data(entsoe_api, "2024-01-01", "2024-12-31")
+    historical_data = historical_data.drop(columns=['historical_total_generation_Fossil Gas', 'historical_total_generation_Hydro Water Reservoir', 'historical_total_generation_Nuclear',  'historical_total_generation_Other'])
+    if historical_data is not None:
+        print("Historical Data:")
+        print(historical_data.columns)
+        print(historical_data)
 
-    # client = EntsoePandasClient(api_key=entose_api)
-    # start_date = pd.Timestamp("2025-01-03", tz="Europe/Berlin")
-    # end_date = pd.Timestamp("2025-01-04", tz="Europe/Berlin")
-    # country_code = "SE_3"
+    # Fetch forecasted data
+    forecasted_data = fetch_forecasted_data(entsoe_api, "2025-01-04", "2025-01-09")
+    if forecasted_data is not None:
+        print("Forecasted Data:")
 
-    # print(hydro_storage)
+        print(forecasted_data.columns)
+
+        print("--------\n")
+        print(forecasted_data.tail(50))
+        print("--------\n")
+        print(forecasted_data)
