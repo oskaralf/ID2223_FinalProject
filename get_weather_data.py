@@ -78,12 +78,11 @@ def get_historical_weather(city, start_date, end_date, latitude, longitude):
 
 def get_weather_forecast(city, start_date, end_date, latitude, longitude):
     # Setup the Open-Meteo API client with cache and retry on error
-    cache_session = requests_cache.CachedSession('.cache', expire_after = 3600)
-    retry_session = retry(cache_session, retries = 5, backoff_factor = 0.2)
-    openmeteo = openmeteo_requests.Client(session = retry_session)
+    cache_session = requests_cache.CachedSession('.cache', expire_after=3600)
+    retry_session = retry(cache_session, retries=5, backoff_factor=0.2)
+    openmeteo = openmeteo_requests.Client(session=retry_session)
 
     # Make sure all required weather variables are listed here
-    # The order of variables in hourly or daily is important to assign them correctly below
     url = "https://api.open-meteo.com/v1/forecast"
     params = {
         "latitude": latitude,
@@ -111,11 +110,11 @@ def get_weather_forecast(city, start_date, end_date, latitude, longitude):
     hourly_wind_direction_10m = hourly.Variables(7).ValuesAsNumpy()
     hourly_wind_direction_120m = hourly.Variables(8).ValuesAsNumpy()
 
-    hourly_data = {"time_start": pd.date_range(
-        start = pd.to_datetime(hourly.Time(), unit = "s", utc = True),
-        end = pd.to_datetime(hourly.TimeEnd(), unit = "s", utc = True),
-        freq = pd.Timedelta(seconds = hourly.Interval()),
-        inclusive = "left"
+    hourly_data = {"datetime": pd.date_range(
+        start=pd.to_datetime(hourly.Time(), unit="s", utc=True),
+        end=pd.to_datetime(hourly.TimeEnd(), unit="s", utc=True),
+        freq=pd.Timedelta(seconds=hourly.Interval()),
+        inclusive="left"
     )}
     hourly_data["temperature_2m"] = hourly_temperature_2m
     hourly_data["precipitation"] = hourly_precipitation
@@ -127,20 +126,12 @@ def get_weather_forecast(city, start_date, end_date, latitude, longitude):
     hourly_data["wind_direction_10m"] = hourly_wind_direction_10m
     hourly_data["wind_direction_100m"] = hourly_wind_direction_120m
 
-    
-    hourly_dataframe = pd.DataFrame(data = hourly_data)
-    hourly_dataframe['city'] = city
-    hourly_dataframe['time_start'] = pd.to_datetime(hourly_dataframe['time_start']).dt.strftime('%Y-%m-%dT%H:%M:%S')
-    columns_order = [
-        'time_start', 'temperature_2m', 'precipitation', 'snow_depth', 'pressure_msl',
-        'cloud_cover', 'wind_speed_10m', 'wind_speed_100m', 'wind_direction_10m',
-        'wind_direction_100m', 'city'
-    ]
-    #hourly_dataframe['date'] = hourly_dataframe['datetime'].dt.date
-    #hourly_dataframe['hour'] = hourly_dataframe['datetime'].dt.hour
-    #hourly_dataframe = hourly_dataframe.drop(columns=['datetime'])
-    hourly_dataframe = hourly_dataframe[columns_order]
+    hourly_dataframe = pd.DataFrame(data=hourly_data)
+    hourly_dataframe['date'] = hourly_dataframe['datetime'].dt.date
+    hourly_dataframe['hour'] = hourly_dataframe['datetime'].dt.hour
+    hourly_dataframe = hourly_dataframe.drop(columns=['datetime'])
     hourly_dataframe = hourly_dataframe.dropna()
+    hourly_dataframe['city'] = city
     
     return hourly_dataframe
 
