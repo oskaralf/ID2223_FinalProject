@@ -1,9 +1,6 @@
 pandas
-os
-hopsworks
 numpy
 requests
-datetime
 xgboost
 scikit-learn
 geopy
@@ -12,4 +9,6 @@ openmeteo-requests
 requests-cache
 retry-requests
 hsfs
-pathlib
+python-dotenv
+hopsworks
+entsoe-py

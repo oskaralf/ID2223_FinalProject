@@ -234,9 +234,9 @@ def fetch_historical_data(api_key, start_date, end_date):
 
     # Neighboring countries and their codes
     neighboring_countries = {
-        "Finland": "FI",
-        "Norway": "10YNO-1--------2",
-        "Denmark": "10YDK-1--------W",
+        "finland": "FI",
+        "norway": "10YNO-1--------2",
+        "denmark": "10YDK-1--------W",
     }
 
     try:
@@ -247,11 +247,11 @@ def fetch_historical_data(api_key, start_date, end_date):
         try:
             actual_load = ensure_valid_series(
                 client.query_load(country_code, start=start_date, end=end_date),
-                "historical_load_SE3",
+                "load_SE3",
                 start_date,
                 end_date
             )
-            data_frames.append(actual_load.rename(columns={actual_load.columns[0]: "historical_load_SE3"}))
+            data_frames.append(actual_load.rename(columns={actual_load.columns[0]: "load_se3"}))
         except Exception as e:
             print(f"[DEBUG] Error fetching historical load for SE3: {e}")
 
@@ -260,11 +260,11 @@ def fetch_historical_data(api_key, start_date, end_date):
             try:
                 load = ensure_valid_series(
                     client.query_load(country_code, start=start_date, end=end_date),
-                    f"historical_load_{country_name}",
+                    f"load_{country_name}",
                     start_date,
                     end_date
                 )
-                data_frames.append(load.rename(columns={load.columns[0]: f"historical_load_{country_name}"}))
+                data_frames.append(load.rename(columns={load.columns[0]: f"load_{country_name}"}))
                 print(f"[DEBUG] Successfully fetched load data for {country_name}.")
             except Exception as e:
                 print(f"[DEBUG] Error fetching historical load for {country_name}: {e}")
@@ -273,11 +273,11 @@ def fetch_historical_data(api_key, start_date, end_date):
         try:
             day_ahead_prices = ensure_valid_series(
                 client.query_day_ahead_prices(country_code, start=start_date, end=end_date),
-                "historical_day_ahead_prices",
+                "prices",
                 start_date,
                 end_date
             )
-            data_frames.append(day_ahead_prices.to_frame(name="historical_day_ahead_prices"))
+            data_frames.append(day_ahead_prices.to_frame(name="prices"))
         except Exception as e:
             print(f"[DEBUG] Error fetching historical day-ahead prices: {e}")
 
@@ -285,11 +285,11 @@ def fetch_historical_data(api_key, start_date, end_date):
         try:
             total_generation = ensure_valid_series(
                 client.query_generation(country_code, start=start_date, end=end_date),
-                "historical_total_generation",
+                "total_generation",
                 start_date,
                 end_date
             )
-            data_frames.append(total_generation.add_prefix("historical_total_generation_"))
+            data_frames.append(total_generation.add_prefix("total_generation_"))
         except Exception as e:
             print(f"[DEBUG] Error fetching historical total generation: {e}")
 
@@ -302,21 +302,21 @@ def fetch_historical_data(api_key, start_date, end_date):
                     export_flows.index = pd.to_datetime(export_flows.index)
                     export_flows = export_flows.resample("h").mean()
                     data_frames.append(
-                        export_flows.to_frame(name=f"historical_physical_flows_SE3_to_{country_name}")
+                        export_flows.to_frame(name=f"flows_se3_to_{country_name}")
                     )
                     print(f"[DEBUG] Successfully fetched cross-border flows SE3 to {country_name}.")
                 else:
                     print(f"[DEBUG] Cross-border flows SE3 to {country_name}: No data available for the given period.")
                     index = pd.date_range(start=start_date, end=end_date, freq="h", tz="Europe/Berlin")
                     empty_series = pd.Series(
-                        index=index, dtype=float, name=f"historical_physical_flows_SE3_to_{country_name}"
+                        index=index, dtype=float, name=f"flows_se3_to_{country_name}"
                     )
                     data_frames.append(empty_series.to_frame())
             except Exception as e:
                 print(f"[DEBUG] Error fetching cross-border physical flows from SE3 to {country_name}: {e}")
                 index = pd.date_range(start=start_date, end=end_date, freq="h", tz="Europe/Berlin")
                 empty_series = pd.Series(
-                    index=index, dtype=float, name=f"historical_physical_flows_SE3_to_{country_name}"
+                    index=index, dtype=float, name=f"flows_se3_to_{country_name}"
                 )
                 data_frames.append(empty_series.to_frame())
 
@@ -327,21 +327,21 @@ def fetch_historical_data(api_key, start_date, end_date):
                     import_flows.index = pd.to_datetime(import_flows.index)
                     import_flows = import_flows.resample("h").mean()
                     data_frames.append(
-                        import_flows.to_frame(name=f"historical_physical_flows_{country_name}_to_SE3")
+                        import_flows.to_frame(name=f"flows_{country_name}_to_se3")
                     )
                     print(f"[DEBUG] Successfully fetched cross-border flows {country_name} to SE3.")
                 else:
                     print(f"[DEBUG] Cross-border flows {country_name} to SE3: No data available for the given period.")
                     index = pd.date_range(start=start_date, end=end_date, freq="h", tz="Europe/Berlin")
                     empty_series = pd.Series(
-                        index=index, dtype=float, name=f"historical_physical_flows_{country_name}_to_SE3"
+                        index=index, dtype=float, name=f"flows_{country_name}_to_se3"
                     )
                     data_frames.append(empty_series.to_frame())
             except Exception as e:
                 print(f"[DEBUG] Error fetching cross-border physical flows from {country_name} to SE3: {e}")
                 index = pd.date_range(start=start_date, end=end_date, freq="h", tz="Europe/Berlin")
                 empty_series = pd.Series(
-                    index=index, dtype=float, name=f"historical_physical_flows_{country_name}_to_SE3"
+                    index=index, dtype=float, name=f"flows_{country_name}_to_se3"
                 )
                 data_frames.append(empty_series.to_frame())
 
