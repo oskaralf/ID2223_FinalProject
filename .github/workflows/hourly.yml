@@ -62,7 +62,7 @@ jobs:
           commit_message: "Predictions published"
           commit_options: '--no-verify --signoff'
 
-          file_pattern: 'Images/*'
+          file_pattern: 'notebooks/Images/'
 
           repository: .
 
