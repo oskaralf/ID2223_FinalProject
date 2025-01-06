@@ -23,6 +23,9 @@ def get_historical_weather(city, start_date, end_date, latitude, longitude):
     retry_session = retry(cache_session, retries=5, backoff_factor=0.2)
     openmeteo = openmeteo_requests.Client(session=retry_session)
 
+    print(start_date)
+    print(end_date)
+
     url = "https://archive-api.open-meteo.com/v1/archive"
     params = {
         "latitude": latitude,
@@ -72,6 +75,8 @@ def get_historical_weather(city, start_date, end_date, latitude, longitude):
     hourly_dataframe = hourly_dataframe.drop(columns=['datetime'])
     hourly_dataframe = hourly_dataframe.dropna()
     hourly_dataframe['city'] = city
+    print('MAX DATE')
+    print(hourly_dataframe['date'].max())
     return hourly_dataframe
 
 
@@ -136,23 +141,25 @@ def get_weather_forecast(city, start_date, end_date, latitude, longitude):
     return hourly_dataframe
 
 def main():
-    df = pd.read_csv("price_data_SE1.csv")
-    df['date'] = pd.to_datetime(df['date'])  
-    earliest = df['date'].min()  
-    earliest_str = earliest.strftime('%Y-%m-%d') 
-    print(f"Earliest date: {earliest_str}")
+    hist_weather_df = get_historical_weather("Stockhom", "2022-11-01", "2025-01-06", 59.3294, 18.0687)
+    print(hist_weather_df)
+    # df = pd.read_csv("price_data_SE1.csv")
+    # df['date'] = pd.to_datetime(df['date'])  
+    # earliest = df['date'].min()  
+    # earliest_str = earliest.strftime('%Y-%m-%d') 
+    # print(f"Earliest date: {earliest_str}")
 
-    today = datetime.date.today()  
-    today_str = today.strftime('%Y-%m-%d')  
-    print(f"Today's date: {today_str}")
+    # today = datetime.date.today()  
+    # today_str = today.strftime('%Y-%m-%d')  
+    # print(f"Today's date: {today_str}")
 
-    lat = 65.5841
-    lon = 22.1547
-    city = "Luleå"
-    weather_df = get_historical_weather(city, earliest_str, today_str, lat, lon)
-    print(weather_df.head())
+    # lat = 65.5841
+    # lon = 22.1547
+    # city = "Luleå"
+    # weather_df = get_historical_weather(city, earliest_str, today_str, lat, lon)
+    # print(weather_df.head())
 
-    weather_df.to_csv('weather_data_SE4.csv', index=False)
+    # weather_df.to_csv('weather_data_SE4.csv', index=False)
 
 if __name__ == "__main__":
     main()
