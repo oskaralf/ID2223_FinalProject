@@ -9,6 +9,7 @@ openmeteo-requests
 requests-cache
 retry-requests
 hsfs
+pyarrow
 python-dotenv
 hopsworks
 entsoe-py
