@@ -46,6 +46,13 @@ jobs:
           echo "Finished executing notebooks."
           echo "Checking for files in IMAGES"
 
+
+      - name: List Files in Images Directory
+        run: |
+            echo "Listing files in Images directory:"
+            ls -la notebooks/Images/
+
+
       - name: Verify modified files with git status
         run: git status
 
