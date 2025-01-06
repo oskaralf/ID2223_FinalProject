@@ -29,4 +29,5 @@ jobs:
           HOPSWORKS_API_KEY: ${{ secrets.HOPSWORKS_API_KEY }}
           ENTSOE_API: ${{ secrets.ENTSOE_API }}
         run: |
+          cd notebooks
           python update.py
