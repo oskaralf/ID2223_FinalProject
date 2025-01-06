@@ -16,3 +16,4 @@ entsoe-py
 jupyter
 nbconvert
 great_expectations==0.18.12
+confluent-kafka==2.3.0
