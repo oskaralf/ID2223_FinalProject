@@ -37,7 +37,7 @@ jobs:
 
       - name: execute python workflows from bash script
         env:
-          HOPSWORKS_API_KEY: ${{ secrets.HOPSWORKS_API_KEY }},
+          HOPSWORKS_API_KEY: ${{ secrets.HOPSWORKS_API_KEY }}
           ENTSOE_API: ${{ secrets.ENTSOE_API }}
         run: |
           cd notebooks
