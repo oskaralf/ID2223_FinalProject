@@ -15,4 +15,4 @@ python-dotenv
 entsoe-py
 jupyter
 nbconvert
-great_expectations
+great_expectations==0.18.12
