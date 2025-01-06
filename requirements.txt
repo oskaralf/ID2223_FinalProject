@@ -13,3 +13,5 @@ hsfs==2.1.8
 pyarrow
 python-dotenv
 entsoe-py
+jupyter
+nbconvert
