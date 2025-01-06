@@ -29,13 +29,17 @@ from format_data import format_weather_data, format_price_data, process_weather_
 from get_electricity_prices import get_data
 from get_weather_data import get_historical_weather, get_weather_forecast
 from entsoe_data import fetch_historical_data, ensure_valid_series
+from util import modify_weather_df, modify_entsoe_df, create_lagging_columns, add_future_price_column
 
-if not os.getenv("CI"):
+
+
+if not os.getenv("CI"):  # CI is a common variable set in GitHub Actions
     load_dotenv()
     
 hopsworks_api = os.getenv("HOPSWORKS_API_KEY")
 entose_api = os.getenv("ENTSOE_API")
 
+# Check if keys are loaded properly
 if not hopsworks_api:
     raise ValueError("HOPSWORKS_API_KEY is not set.")
 if not entose_api:
@@ -48,11 +52,15 @@ project = hopsworks.login()
 fs = project.get_feature_store() 
 print(f"Connected to project: {project.name}")
 
+
 start_date = datetime.now().strftime('%Y-%m-%d')
 end_date = (datetime.now() + timedelta(days=1)).strftime('%Y-%m-%d')
 
 forecast = get_weather_forecast("Stockholm", start_date, end_date, 59.3294, 18.0687)
+
 formatted_forecast_df = process_weather_data(forecast)
+formatted_forecast_df = modify_weather_df(formatted_forecast_df)
+formatted_forecast_df = create_lagging_columns(formatted_forecast_df)
 
 weather_fg = fs.get_feature_group(
     name='weather_data_3',
@@ -72,4 +80,8 @@ entsoe_df.columns = entsoe_df.columns.str.lower().str.replace(' ', '_').str.repl
 entsoe_df['date'] = pd.to_datetime(entsoe_df['date'])
 entsoe_df['date'] = pd.to_datetime(entsoe_df['date']).dt.tz_localize('UTC').dt.tz_convert(None)
 entsoe_df = entsoe_df.dropna()
+
+entsoe_df = modify_entsoe_df(entsoe_df)
+entsoe_df = create_lagging_columns(entsoe_df)
+entsoe_df = add_future_price_column(entsoe_df)
 entsoe_fg.insert(entsoe_df)
