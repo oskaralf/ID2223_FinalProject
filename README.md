@@ -35,3 +35,7 @@ Trains a XGBoost model with hourly data based on the historical data. Stores it 
 
 # Notebook 4 - Inference
 Loads the model from Hopsworks, extracts the weather forecast data from the feature group and predicts 7 days in advance. 
+
+
+# SITE OF PREDICTIONS
+https://oskaralf.github.io/electricity/notebooks/Images/predicted_electricity_price_over_time_SE4.png
