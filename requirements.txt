@@ -8,8 +8,8 @@ matplotlib
 openmeteo-requests
 requests-cache
 retry-requests
-hsfs
+hopsworks=4.1.4
+hsfs=2.1.8
 pyarrow
 python-dotenv
-hopsworks
 entsoe-py
