@@ -24,7 +24,9 @@ Loads the model from Hopsworks, extracts the weather forecast data from the feat
 Weather data gathered through Open Meteo API, for Stockholm cordinates, through:
 https://open-meteo.com/en/docs
 
-Electricity data gathered through Entsoe [add link]:
+Electricity data gathered through Entsoe:
+https://transparency.entsoe.eu/content/static_content/Static%20content/web%20api/Guide.html
+
 
 Model trained on data from 2022-11-01 until 2024-12-31. 
 
@@ -98,3 +100,4 @@ Improving the quality and timeliness of the data used in our model is crucial. A
 Currently, our model uses "old feature data" to predict the next hour's electricity price. While this approach provides valuable insights, it may not be sufficient for real-time applications. Developing a system that can process and analyze data in real-time would enable more accurate and timely predictions. This could involve leveraging streaming data technologies and real-time analytics platforms
 
 # How to run the code
+Run the notebooks. An API key to ENTOS-E is required. 

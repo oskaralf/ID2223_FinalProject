@@ -3,7 +3,7 @@ name: hourly
 on:
   workflow_dispatch:
   schedule:
-    - cron: '10 * * * *'
+    - cron: '1 * * * *'
 
 jobs:
   schedule_pipelines:
