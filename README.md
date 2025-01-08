@@ -97,7 +97,7 @@ We used grid search to find the optimal hyperparameters for the XGBoost model. D
 #### Cross-validation
 To ensure the model's generalizability, we used 5-fold cross-validation when tuning hyperparameters and selecting features. This approach provided a reliable estimate of the model's performance on unseen data, helping to prevent overfitting.
 
-# Results
+## Results
 https://oskaralf.github.io/ID2223_FinalProject/notebooks/Images/predicted_electricity_price_over_time_SE3.png
 
 We improved the model's performance by systematically reducing the MSE and increasing the R2 through feature engineering. This involved analyzing feature importance to retain impactful variables, and creating new features based on relationships. Introducing the lagging varaibles significantly reduced the prediction error. It turns out that the price and its trend became very important to the quality of the predictions, and some of the other features that could be interesting to incorporate (both from weather data and entsoe data, such as water reservoirs etc.) just added noise to the model, and thereby reducing its quality. Hence we used hyperparameter tuning and feature selection during validation, as described under the method section.
@@ -109,7 +109,7 @@ Below is a visualization of the feature importance, highlighting the relative co
 <img src="Features/IMG_444.png" alt="Rejected" width="400" />
 
 
-# Further improvements
+## Further improvements
 
 ### Risk of multicollinearity
 Multicollinearity is a potential issue in our model due to the high correlation between some of the features. For instance, features such as total load and total generation may be highly correlated, leading to redundancy and potential instability in the model's coefficients. This can make it challenging to interpret the model and reduce its predictive power. Addressing multicollinearity through techniques such as principal component analysis could help mitigate this risk.
@@ -132,5 +132,5 @@ Improving the quality and timeliness of the data used in our model could be an i
 ### API lag and risk of inconcistency
 The electricity price API, Entsoe, we currently use has its limitations, such as occasional lags, which can result in inconsistent and delayed predictions, thereby reducing the model's overall functionality. Potential solutions to these issues include switching to more reliable data providers, implementing data validation and correction mechanisms to handle inconsistencies when they arise. The only issue here for us that these interfaces were not free to use. The free does not support webhooks for ENTSO-E to send post request for the system to update as new data becomes available, which would be necessary for more real-time predictions. 
 
-# How to run the code
-Run the notebooks. An API key to ENTOS-E is required. 
+## How to run the code
+Run the notebooks. Hopsworks account is required. API keys to Hopsworks and ENTOS-E is also required. 
