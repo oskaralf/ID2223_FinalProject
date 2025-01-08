@@ -10,7 +10,8 @@ I am a homeowner and about to charge my electrical vehicle. Its 19:00 and I am w
 ## Why this project deserves excellent
 
 # SITE OF PREDICTIONS
-https://oskaralf.github.io/electricity/notebooks/Images/predicted_electricity_price_over_time_SE3.png
+https://oskaralf.github.io/ID2223_FinalProject/notebooks/Images/predicted_electricity_price_over_time_SE3.png
+
 
 
 ## Overview of notebooks
@@ -86,8 +87,12 @@ We used grid search to find the optimal hyperparameters for the XGBoost model. D
 To ensure the model's generalizability, we used 5-fold cross-validation when tuning hyperparameters and selecting features. This approach provided a reliable estimate of the model's performance on unseen data, helping to prevent overfitting.
 
 # Results
-https://oskaralf.github.io/electricity/notebooks/Images/predicted_electricity_price_over_time_SE3.png
+https://oskaralf.github.io/ID2223_FinalProject/notebooks/Images/predicted_electricity_price_over_time_SE3.png
 
+We improved the model's performance by systematically reducing the MSE and increasing the R² through feature engineering. This involved analyzing feature importance to retain impactful variables, addressing multicollinearity, and creating new features based on relationships between variables.
+
+Below is a visualization of the feature importance, highlighting the relative contribution of each feature to the model's predictions.
+![Example Image](Features/IMG_1411.png)
 
 # Further improvements
 
