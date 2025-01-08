@@ -92,6 +92,8 @@ https://oskaralf.github.io/ID2223_FinalProject/notebooks/Images/predicted_electr
 We improved the model's performance by systematically reducing the MSE and increasing the R2 through feature engineering. This involved analyzing feature importance to retain impactful variables, addressing multicollinearity, and creating new features based on relationships. Introducing the lagging varaibles significantly reduced the prediction error. It turns out that the price and its trend is important to the quality of the predictions, and some of the other features that could be interesting to incorporate (both from weather data and entsoe data, such as water reservoirs etc.) just added noise to the model, and thereby reducing its wuality. Hence we've chosen to stick with the features presented below. 
 
 Below is a visualization of the feature importance, highlighting the relative contribution of each feature to the model's predictions.
+
+
 <img src="Features/IMG_1411.png" alt="Chosen" width="400" />
 
 <img src="Features/IMG_4942.png" alt="Rejected" width="400" />
