@@ -96,7 +96,7 @@ Below is a visualization of the feature importance, highlighting the relative co
 
 <img src="Features/IMG_1411.png" alt="Chosen" width="400" />
 
-<img src="Features/IMG_4942.png" alt="Rejected" width="400" />
+<img src="Features/IMG_444.png" alt="Rejected" width="400" />
 
 
 # Further improvements
