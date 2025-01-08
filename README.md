@@ -9,6 +9,17 @@ I am a homeowner and about to charge my electrical vehicle. Its 19:00 and I am w
 
 ## Why this project deserves excellent
 
+### Relevant use case
+This project addresses a highly relevant use case, especially given the recent surge in electricity prices in Sweden and the volatile nature of these prices. By providing a real-time platform to monitor and predict electricity price fluctuations, as well as offering insights into recent historical data, this project can help households make small adjustments to save on electricity costs.
+
+### Creative feature engineering 
+The project features creative engineering, capturing both local and international (nordic) electricity demand, import and export rates, and other factors that influence electricity prices. It also incorporates lagging rates to capture temporal changes, all in real-time. While better APIs and data sources could enhance the model, the current implementation effectively utilizes available free resources.
+
+### ML best practices
+The structure and machine learning pipeline follow best practices, ensuring robustness and scalability. Additionally, hyperparameter tuning and feature importance analysis were conducted to avoid and mitigate overfitting, resulting in a more generalized and reliable model.
+
+
+
 # SITE OF PREDICTIONS
 https://oskaralf.github.io/ID2223_FinalProject/notebooks/Images/predicted_electricity_price_over_time_SE3.png
 
@@ -17,7 +28,7 @@ https://oskaralf.github.io/ID2223_FinalProject/notebooks/Images/predicted_electr
 ## Overview of notebooks
 
 ### Notebook 1 - Backfill
-Retrieves and stores the weather data and electricity data into feature stores for SE3 in Sweden, with the weather data based on the coordinates of Stockholm.
+Retrieves and stores the weather data and electricity data into feature groups for SE3 in Sweden, with the weather data based on the coordinates of Stockholm.
 
 ### Notebook 2 - Pipeline
 Loads the feature groups, electricity_price_data and weather_data to insert the forecast weather data, that cna be used for daily scheduling purposes. 
@@ -26,7 +37,7 @@ Loads the feature groups, electricity_price_data and weather_data to insert the 
 Trains a XGBoost model with hourly data based on the historical data. Stores it in the model registry in Hopsworks for inference.
 
 ### Notebook 4 - Inference
-Loads the model from Hopsworks, extracts the weather forecast data from the feature group and predicts 7 days in advance. 
+Loads the model from Hopsworks, extracts the weather forecast data from the feature group and predicts electricity price for the coming hour. The script is set by Github actions to run in the beginning of each hour. 
 
 ## Data 
 
@@ -55,7 +66,7 @@ International Load: The electricity demand in neighboring countries, reported at
 
 Swedish Load: The total electricity consumption within Sweden, collected on an hourly basis, serving as a direct indicator of domestic demand.
 
-Cross-border flows to neighboring countries: Hourly measurements of electricity imported/exported into/from Sweden from/to neighboring countries, mirroring market dynamics and price. 20
+Cross-border flows to neighboring countries: Hourly measurements of electricity imported/exported into/from Sweden from/to neighboring (Nordic) countries, mirroring market dynamics and price.
 
 Electricity Price: Historical hourly electricity prices in Sweden
 
@@ -89,10 +100,9 @@ To ensure the model's generalizability, we used 5-fold cross-validation when tun
 # Results
 https://oskaralf.github.io/ID2223_FinalProject/notebooks/Images/predicted_electricity_price_over_time_SE3.png
 
-We improved the model's performance by systematically reducing the MSE and increasing the R2 through feature engineering. This involved analyzing feature importance to retain impactful variables, addressing multicollinearity, and creating new features based on relationships. Introducing the lagging varaibles significantly reduced the prediction error. It turns out that the price and its trend is important to the quality of the predictions, and some of the other features that could be interesting to incorporate (both from weather data and entsoe data, such as water reservoirs etc.) just added noise to the model, and thereby reducing its wuality. Hence we've chosen to stick with the features presented below. 
+We improved the model's performance by systematically reducing the MSE and increasing the R2 through feature engineering. This involved analyzing feature importance to retain impactful variables, and creating new features based on relationships. Introducing the lagging varaibles significantly reduced the prediction error. It turns out that the price and its trend became very important to the quality of the predictions, and some of the other features that could be interesting to incorporate (both from weather data and entsoe data, such as water reservoirs etc.) just added noise to the model, and thereby reducing its quality. Hence we used hyperparameter tuning and feature selection during validation, as described under the method section.
 
-Below is a visualization of the feature importance, highlighting the relative contribution of each feature to the model's predictions.
-
+Below is a visualization of the feature importance, highlighting the relative contribution of each feature to the model's predictions. It shows one picture for features used in the beginning, and then the features after selection and regularization was introduced.
 
 <img src="Features/IMG_1411.png" alt="Chosen" width="400" />
 
