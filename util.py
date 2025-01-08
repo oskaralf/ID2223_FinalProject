@@ -28,7 +28,6 @@ def modify_weather_df(df):
     return df
 
 def modify_entsoe_df(df):
-    # Define the columns to be merged for imported_energy
     columns_to_merge = [
         'flows_se3_to_finland', 'flows_finland_to_se3',
         'flows_se3_to_norway', 'flows_norway_to_se3',
@@ -64,35 +63,29 @@ def modify_entsoe_df(df):
 
 
 def create_lagging_columns(df):
-    # Ensure date column is datetime
     df['date'] = pd.to_datetime(df['date'])
 
-    # Calculate the difference in hours
     df['date_diff'] = df['date'].diff().dt.total_seconds() / 3600
 
- # List of original columns to avoid including newly created lagging columns
     original_columns = df.columns.tolist()
 
-    # Loop to create lagging columns
     for column in original_columns:
         if column != 'date' and column != 'date_diff':
             df[column + '_lag'] = df[column].shift(1).where(df['date_diff'] == 1)
 
     # print(df.head())
 
-    # Drop the date_diff column
     df = df.drop(columns=['date_diff'])
     print("number of rows before dropping na: ", df.shape[0])
     df = df.dropna()
     print("number of rows after dropping na: ", df.shape[0])
-    # print(df.head())
+
     return df
 
 def add_future_price_column(df, price_column='prices'):
-    # Ensure the price column exists in the DataFrame
+
     if price_column not in df.columns:
         raise ValueError(f"Column '{price_column}' does not exist in the DataFrame")
 
-    # Create the future_price column by shifting the price column backwards
     df['future_price'] = df[price_column].shift(-1)
     return df

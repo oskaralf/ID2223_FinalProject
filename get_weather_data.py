@@ -82,12 +82,9 @@ def get_historical_weather(city, start_date, end_date, latitude, longitude):
 
 
 def get_weather_forecast(city, start_date, end_date, latitude, longitude):
-    # Setup the Open-Meteo API client with cache and retry on error
     cache_session = requests_cache.CachedSession('.cache', expire_after=3600)
     retry_session = retry(cache_session, retries=5, backoff_factor=0.2)
     openmeteo = openmeteo_requests.Client(session=retry_session)
-
-    # Make sure all required weather variables are listed here
     url = "https://api.open-meteo.com/v1/forecast"
     params = {
         "latitude": latitude,
@@ -96,14 +93,12 @@ def get_weather_forecast(city, start_date, end_date, latitude, longitude):
     }
     responses = openmeteo.weather_api(url, params=params)
 
-    # Process first location. Add a for-loop for multiple locations or weather models
     response = responses[0]
     print(f"Coordinates {response.Latitude()}°N {response.Longitude()}°E")
     print(f"Elevation {response.Elevation()} m asl")
     print(f"Timezone {response.Timezone()} {response.TimezoneAbbreviation()}")
     print(f"Timezone difference to GMT+0 {response.UtcOffsetSeconds()} s")
 
-    # Process hourly data. The order of variables needs to be the same as requested.
     hourly = response.Hourly()
     hourly_temperature_2m = hourly.Variables(0).ValuesAsNumpy()
     hourly_precipitation = hourly.Variables(1).ValuesAsNumpy()
@@ -143,23 +138,7 @@ def get_weather_forecast(city, start_date, end_date, latitude, longitude):
 def main():
     hist_weather_df = get_historical_weather("Stockhom", "2022-11-01", "2025-01-06", 59.3294, 18.0687)
     print(hist_weather_df)
-    # df = pd.read_csv("price_data_SE1.csv")
-    # df['date'] = pd.to_datetime(df['date'])  
-    # earliest = df['date'].min()  
-    # earliest_str = earliest.strftime('%Y-%m-%d') 
-    # print(f"Earliest date: {earliest_str}")
 
-    # today = datetime.date.today()  
-    # today_str = today.strftime('%Y-%m-%d')  
-    # print(f"Today's date: {today_str}")
-
-    # lat = 65.5841
-    # lon = 22.1547
-    # city = "Luleå"
-    # weather_df = get_historical_weather(city, earliest_str, today_str, lat, lon)
-    # print(weather_df.head())
-
-    # weather_df.to_csv('weather_data_SE4.csv', index=False)
 
 if __name__ == "__main__":
     main()

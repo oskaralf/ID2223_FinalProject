@@ -18,19 +18,15 @@ def create_dir():
     os.makedirs('model', exist_ok=True)
 
 
-
-
-
 def train_model(data):
-    # Drop unnecessary columns
+
     data = data.drop(columns=['date', 'city'])
     X = data.drop(columns=['price_SE'])
     y = data['price_SE']
 
-    # Split the data into training and testing sets
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
     
-    # Define the preprocessing steps
+
     numeric_features = X.columns
     numeric_transformer = Pipeline(steps=[
         ('scaler', StandardScaler()),
@@ -70,61 +66,61 @@ def train_model(data):
 
 
 
-# def train_model(data):
-#     data = data.drop(columns=['date', 'city'])
-#     X = data.drop(columns=['price_SE'])
-#     y = data['price_SE']
+def train_model2(data):
+    data = data.drop(columns=['date', 'city'])
+    X = data.drop(columns=['price_SE'])
+    y = data['price_SE']
 
-#     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
     
 
-#     numeric_features = X.columns
-#     numeric_transformer = Pipeline(steps=[
-#         ('scaler', StandardScaler()),
-#         ('poly', PolynomialFeatures(degree=2, include_bias=False))
-#     ])
+    numeric_features = X.columns
+    numeric_transformer = Pipeline(steps=[
+        ('scaler', StandardScaler()),
+        ('poly', PolynomialFeatures(degree=2, include_bias=False))
+    ])
     
-#     preprocessor = ColumnTransformer(
-#         transformers=[
-#             ('num', numeric_transformer, numeric_features)
-#         ]
-#     )
+    preprocessor = ColumnTransformer(
+        transformers=[
+            ('num', numeric_transformer, numeric_features)
+        ]
+    )
     
-#     model = xgb.XGBRegressor(objective='reg:squarederror')
+    model = xgb.XGBRegressor(objective='reg:squarederror')
 
-#     pipeline = Pipeline(steps=[
-#         ('preprocessor', preprocessor),
-#         ('model', model)
-#     ])
+    pipeline = Pipeline(steps=[
+        ('preprocessor', preprocessor),
+        ('model', model)
+    ])
 
-#     # param_grid = {
-#     #     'model__n_estimators': [200, 300],
-#     #     'model__learning_rate': [0.2, 0.3],
-#     #     'model__max_depth': [7, 9],
-#     #     'model__subsample': [0.8, 1.0],
-#     #     'model__colsample_bytree': [0.8, 1.0],
-#     #     'model__gamma': [0, 0.1, 0.2],
-#     #     'model__min_child_weight': [1, 3],
-#     #     'model__reg_alpha': [0, 0.01],
-#     #     'model__reg_lambda': [1, 1.5]
-#     # }
+    param_grid = {
+        'model__n_estimators': [200, 300],
+        'model__learning_rate': [0.2, 0.3],
+        'model__max_depth': [7, 9],
+        'model__subsample': [0.8, 1.0],
+        'model__colsample_bytree': [0.8, 1.0],
+        'model__gamma': [0, 0.1, 0.2],
+        'model__min_child_weight': [1, 3],
+        'model__reg_alpha': [0, 0.01],
+        'model__reg_lambda': [1, 1.5]
+    }
 
-#     # grid_search = GridSearchCV(estimator=pipeline, param_grid=param_grid, cv=3, scoring='neg_mean_squared_error', verbose=1)
-#     # grid_search.fit(X_train, y_train)
+    grid_search = GridSearchCV(estimator=pipeline, param_grid=param_grid, cv=3, scoring='neg_mean_squared_error', verbose=1)
+    grid_search.fit(X_train, y_train)
 
-#     # best_params = grid_search.best_params_
-#     # best_model = grid_search.best_estimator_
+    best_params = grid_search.best_params_
+    best_model = grid_search.best_estimator_
 
-#     print(f"Best parameters: {best_params}")
+    print(f"Best parameters: {best_params}")
 
-#     y_pred = best_model.predict(X_test)
-#     mse = mean_squared_error(y_test, y_pred)
-#     r2 = r2_score(y_test, y_pred)
+    y_pred = best_model.predict(X_test)
+    mse = mean_squared_error(y_test, y_pred)
+    r2 = r2_score(y_test, y_pred)
     
-#     print(f"Mean Squared Error: {mse}")
-#     print(f"R-squared: {r2}")
+    print(f"Mean Squared Error: {mse}")
+    print(f"R-squared: {r2}")
 
-#     best_model.named_steps['model'].save_model('model/xgboost_best_model.json')
+    best_model.named_steps['model'].save_model('model/xgboost_best_model.json')
 
 
 
@@ -158,24 +154,15 @@ def x():
 def main():
     print("Started")
     df_weather = get_historical_weather("Stockhom", "2022-11-01", "2025-01-03", 59.3294, 18.0687)
-    #df_price = get_data("SE3")
     changed_weather = process_weather_data(df_weather)
     df_other = pd.read_csv('data/entose_data.csv')
 
     merged_data_df = merge_data(changed_weather, df_other)
 
     print(changed_weather.head())
-    #print(df_price.head())
     print(df_other.head())
 
-    print("----\n")
-    print("----\n")
-    print("----\n")
     print(merged_data_df.head())
-
-    print("----\n")
-    print("----\n")
-    print("----\n")
 
     train_model(merged_data_df)
 
