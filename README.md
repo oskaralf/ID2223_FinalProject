@@ -66,7 +66,7 @@ International Load: The electricity demand in neighboring countries, reported at
 
 Swedish Load: The total electricity consumption within Sweden, collected on an hourly basis, serving as a direct indicator of domestic demand.
 
-Cross-border flows to neighboring countries: Hourly measurements of electricity imported/exported into/from Sweden from/to neighboring countries, mirroring market dynamics and price. 20
+Cross-border flows to neighboring countries: Hourly measurements of electricity imported/exported into/from Sweden from/to neighboring (Nordic) countries, mirroring market dynamics and price.
 
 Electricity Price: Historical hourly electricity prices in Sweden
 
