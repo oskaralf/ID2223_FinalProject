@@ -2,7 +2,7 @@
 This project aims to predict electricity prices in Sweden using machine learning, specifically the XGBoost algorithm. The predictions focus on the next hour's electricity price, leveraging various data points collected in real-time.
 
 # SITE OF PREDICTIONS
-https://oskaralf.github.io/electricity/notebooks/Images/predicted_electricity_price_over_time_SE4.png
+https://oskaralf.github.io/electricity/notebooks/Images/predicted_electricity_price_over_time_SE3.png
 
 ## Overview of notebooks
 
@@ -72,6 +72,8 @@ We used grid search to find the optimal hyperparameters for the XGBoost model. D
 ### Modelling and validation
 
 # Results
+https://oskaralf.github.io/electricity/notebooks/Images/predicted_electricity_price_over_time_SE3.png
+
 
 # Further improvements
 ### Limitations of data
