@@ -28,7 +28,7 @@ https://oskaralf.github.io/ID2223_FinalProject/notebooks/Images/predicted_electr
 ## Overview of notebooks
 
 ### Notebook 1 - Backfill
-Retrieves and stores the weather data and electricity data into feature stores for SE3 in Sweden, with the weather data based on the coordinates of Stockholm.
+Retrieves and stores the weather data and electricity data into feature groups for SE3 in Sweden, with the weather data based on the coordinates of Stockholm.
 
 ### Notebook 2 - Pipeline
 Loads the feature groups, electricity_price_data and weather_data to insert the forecast weather data, that cna be used for daily scheduling purposes. 
@@ -37,7 +37,7 @@ Loads the feature groups, electricity_price_data and weather_data to insert the 
 Trains a XGBoost model with hourly data based on the historical data. Stores it in the model registry in Hopsworks for inference.
 
 ### Notebook 4 - Inference
-Loads the model from Hopsworks, extracts the weather forecast data from the feature group and predicts 7 days in advance. 
+Loads the model from Hopsworks, extracts the weather forecast data from the feature group and predicts electricity price for the coming hour. The script is set by Github actions to run in the beginning of each hour. 
 
 ## Data 
 
