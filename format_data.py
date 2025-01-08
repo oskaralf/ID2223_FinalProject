@@ -4,7 +4,6 @@ import pandas as pd
 import json
 
 def format_weather_data(weather_df):
-    # Combine 'date' and 'hour' into 'time_start' in the desired format
     weather_df['time_start'] = weather_df.apply(lambda row: f"{row['date']}T{row['hour']:02d}:00:00", axis=1)
     weather_df = weather_df.drop(columns=['date', 'hour'])
     columns_order = ['time_start'] + [col for col in weather_df.columns if col != 'time_start']
@@ -37,26 +36,19 @@ def process_price_data(input_file, output_file):
 
 
 def merge_weather_and_price_data(weather_file, price_file, output_file):
-    # Read the weather and price data from CSV files
     weather_df = pd.read_csv(weather_file)
     price_df = pd.read_csv(price_file)
     
-    # Convert 'time_start' to datetime to ensure proper merging
     weather_df['time_start'] = pd.to_datetime(weather_df['time_start'], errors='coerce')
     price_df['time_start'] = pd.to_datetime(price_df['time_start'], errors='coerce')
     
-    # Check for any conversion issues
     if weather_df['time_start'].isnull().any() or price_df['time_start'].isnull().any():
         raise ValueError("Some 'time_start' values could not be converted to datetime.")
     
-    # Format 'time_start' to the desired format
     weather_df['time_start'] = weather_df['time_start'].dt.strftime('%Y-%m-%dT%H:%M:%S')
     price_df['time_start'] = price_df['time_start'].dt.strftime('%Y-%m-%dT%H:%M:%S')
     
-    # Merge the DataFrames based on the 'time_start' column
     merged_df = pd.merge(weather_df, price_df, on='time_start', suffixes=('_weather', '_price'))
-    
-    # Ensure the columns are in the desired order
     columns_order = [
         'date', 'time_start', 'price', 'temperature_2m', 'precipitation', 'snow_depth',
         'pressure_msl', 'cloud_cover', 'wind_speed_10m', 'wind_speed_100m',
@@ -64,7 +56,6 @@ def merge_weather_and_price_data(weather_file, price_file, output_file):
     ]
     merged_df = merged_df[columns_order]
     
-    # Write the merged DataFrame to the output CSV file
     merged_df.to_csv(output_file, index=False)
 
 
@@ -81,7 +72,6 @@ def process_weather_data(df):
 
 
 def merge_data(df1, df2):
-    # Ensure 'date' columns are of the same datetime64[ns] type
     df1['date'] = pd.to_datetime(df1['date']).dt.tz_localize(None)
     df2['date'] = pd.to_datetime(df2['date']).dt.tz_localize(None)
 

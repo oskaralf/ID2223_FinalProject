@@ -10,7 +10,7 @@ I am a homeowner and about to charge my electrical vehicle. Its 19:00 and I am w
 ## Why this project deserves excellent
 
 # SITE OF PREDICTIONS
-https://oskaralf.github.io/electricity/notebooks/Images/predicted_electricity_price_over_time_SE4.png
+https://oskaralf.github.io/electricity/notebooks/Images/predicted_electricity_price_over_time_SE3.png
 
 
 ## Overview of notebooks
@@ -33,7 +33,9 @@ Loads the model from Hopsworks, extracts the weather forecast data from the feat
 Weather data gathered through Open Meteo API, for Stockholm cordinates, through:
 https://open-meteo.com/en/docs
 
-Electricity data gathered through Entsoe [add link]:
+Electricity data gathered through Entsoe:
+https://transparency.entsoe.eu/content/static_content/Static%20content/web%20api/Guide.html
+
 
 Model trained on data from 2022-11-01 until 2024-12-31. 
 
@@ -84,6 +86,8 @@ We used grid search to find the optimal hyperparameters for the XGBoost model. D
 To ensure the model's generalizability, we used 5-fold cross-validation when tuning hyperparameters and selecting features. This approach provided a reliable estimate of the model's performance on unseen data, helping to prevent overfitting.
 
 # Results
+https://oskaralf.github.io/electricity/notebooks/Images/predicted_electricity_price_over_time_SE3.png
+
 
 # Further improvements
 
@@ -109,3 +113,4 @@ Improving the quality and timeliness of the data used in our model could be an i
 The electricity price API, Entsoe, we currently use has its limitations, such as occasional lags, which can result in inconsistent and delayed predictions, thereby reducing the model's overall functionality. Potential solutions to these issues include switching to more reliable data providers, implementing data validation and correction mechanisms to handle inconsistencies when they arise. The only issue here for us that these interfaces were not free to use. 
 
 # How to run the code
+Run the notebooks. An API key to ENTOS-E is required. 

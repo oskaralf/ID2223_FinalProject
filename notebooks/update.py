@@ -33,13 +33,12 @@ from util import modify_weather_df, modify_entsoe_df, create_lagging_columns, ad
 
 
 
-if not os.getenv("CI"):  # CI is a common variable set in GitHub Actions
+if not os.getenv("CI"):
     load_dotenv()
     
 hopsworks_api = os.getenv("HOPSWORKS_API_KEY")
 entose_api = os.getenv("ENTSOE_API")
 
-# Check if keys are loaded properly
 if not hopsworks_api:
     raise ValueError("HOPSWORKS_API_KEY is not set.")
 if not entose_api:
