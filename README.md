@@ -120,7 +120,7 @@ While historical price data is a valuable feature, over-reliance on it can limit
 Improving the quality and timeliness of the data used in our model could be an improvement. Access to better data, including more real-time and high-frequency data, can significantly enhance the model's predictive accuracy. Additionally, integrating more external data sources such as market news, and economic indicators can provide a more comprehensive view of the factors influencing electricity prices. 
 
 ### API lag and risk of inconcistency
-The electricity price API, Entsoe, we currently use has its limitations, such as occasional lags, which can result in inconsistent and delayed predictions, thereby reducing the model's overall functionality. Potential solutions to these issues include switching to more reliable data providers, implementing data validation and correction mechanisms to handle inconsistencies when they arise. The only issue here for us that these interfaces were not free to use. 
+The electricity price API, Entsoe, we currently use has its limitations, such as occasional lags, which can result in inconsistent and delayed predictions, thereby reducing the model's overall functionality. Potential solutions to these issues include switching to more reliable data providers, implementing data validation and correction mechanisms to handle inconsistencies when they arise. The only issue here for us that these interfaces were not free to use. The free does not support webhooks for ENTSO-E to send post request for the system to update as new data becomes available, which would be necessary for more real-time predictions. 
 
 # How to run the code
 Run the notebooks. An API key to ENTOS-E is required. 
