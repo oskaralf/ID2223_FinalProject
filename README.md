@@ -9,6 +9,17 @@ I am a homeowner and about to charge my electrical vehicle. Its 19:00 and I am w
 
 ## Why this project deserves excellent
 
+### Relevant use case
+This project addresses a highly relevant use case, especially given the recent surge in electricity prices in Sweden and the volatile nature of these prices. By providing a real-time platform to monitor and predict electricity price fluctuations, as well as offering insights into recent historical data, this project can help households make small adjustments to save on electricity costs.
+
+### Creative feature engineering 
+The project features creative engineering, capturing both local and international (nordic) electricity demand, import and export rates, and other factors that influence electricity prices. It also incorporates lagging rates to capture temporal changes, all in real-time. While better APIs and data sources could enhance the model, the current implementation effectively utilizes available free resources.
+
+### ML best practices
+The structure and machine learning pipeline follow best practices, ensuring robustness and scalability. Additionally, hyperparameter tuning and feature importance analysis were conducted to avoid and mitigate overfitting, resulting in a more generalized and reliable model.
+
+
+
 # SITE OF PREDICTIONS
 https://oskaralf.github.io/electricity/notebooks/Images/predicted_electricity_price_over_time_SE3.png
 
