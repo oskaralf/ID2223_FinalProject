@@ -100,10 +100,9 @@ To ensure the model's generalizability, we used 5-fold cross-validation when tun
 # Results
 https://oskaralf.github.io/ID2223_FinalProject/notebooks/Images/predicted_electricity_price_over_time_SE3.png
 
-We improved the model's performance by systematically reducing the MSE and increasing the R2 through feature engineering. This involved analyzing feature importance to retain impactful variables, addressing multicollinearity, and creating new features based on relationships. Introducing the lagging varaibles significantly reduced the prediction error. It turns out that the price and its trend is important to the quality of the predictions, and some of the other features that could be interesting to incorporate (both from weather data and entsoe data, such as water reservoirs etc.) just added noise to the model, and thereby reducing its wuality. Hence we've chosen to stick with the features presented below. 
+We improved the model's performance by systematically reducing the MSE and increasing the R2 through feature engineering. This involved analyzing feature importance to retain impactful variables, addressing multicollinearity, and creating new features based on relationships. Introducing the lagging varaibles significantly reduced the prediction error. It turns out that the price and its trend became very important to the quality of the predictions, and some of the other features that could be interesting to incorporate (both from weather data and entsoe data, such as water reservoirs etc.) just added noise to the model, and thereby reducing its quality. Hence we used hyperparameter tuning and feature selection during validation, as described under the method section.
 
-Below is a visualization of the feature importance, highlighting the relative contribution of each feature to the model's predictions.
-
+Below is a visualization of the feature importance, highlighting the relative contribution of each feature to the model's predictions. It shows one picture for features used in the beginning, and then the features after selection and regularization was introduced.
 
 <img src="Features/IMG_1411.png" alt="Chosen" width="400" />
 
