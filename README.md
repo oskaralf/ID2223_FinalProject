@@ -93,6 +93,6 @@ While historical price data is a valuable feature, over-reliance on it can limit
 Improving the quality and timeliness of the data used in our model is crucial. Access to better data, including more real-time and high-frequency data, can significantly enhance the model's predictive accuracy. Additionally, integrating external data sources such as weather forecasts, market news, and economic indicators can provide a more comprehensive view of the factors influencing electricity prices.
 
 ### Real-time predictions
-Currently, our model uses "old feature data" to predict the next hour's electricity price. While this approach provides valuable insights, it may not be sufficient for real-time applications. Developing a system that can process and analyze data in real-time would enable more accurate and timely predictions. This could involve leveraging streaming data technologies and real-time analytics platforms.
+Currently, our model uses "old feature data" to predict the next hour's electricity price. While this approach provides valuable insights, it may not be sufficient for real-time applications. Developing a system that can process and analyze data in real-time would enable more accurate and timely predictions. This could involve leveraging streaming data technologies and real-time analytics platforms
 
 # How to run the code
