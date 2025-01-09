@@ -1,7 +1,7 @@
 # Electricity price prediction in Sweden
 This project aims to predict electricity prices in Sweden using machine learning, specifically the XGBoost algorithm. The predictions focus on the next hour's electricity price, leveraging various data points collected on an hourly basis. Below is a representation of the system.
 
-<img src="Features/image.png" alt="System" width="400" />
+<img src="Features/image.png" alt="System" width="600" />
 
 
 ## How it works
